@@ -4,10 +4,41 @@ Created on Sun Nov 15 09:55:26 2020                 @author: vishal
 """
 size = 5 # 5 gives a bit more accurate , 10 gives a bit more pixelated 
 
+def get_mean(img):
+    r = b = g = total = 0
+    for row in img:
+        for pixel in row:
+           r += pixel[2]
+           g += pixel[1]
+           b += pixel[0]
+           
+           total += 1
+    return (b/total, g/total, r/total)
+
+def get_square(pixel, corner, size):
+    opposite = [corner[0]+size, corner[1]+size]
+    square = pixel[corner[0]:opposite[0], corner[1]:opposite[1]]
+    return square
+def color_difference(p1, p2):
+    tot = 0
+    for c1, c2 in zip(p1, p2):
+        tot += (c1-c2)**2
+    dist = tot ** 0.5
+    return dist
+def pythogoras_theorem(target_rgb, mean_image_rgbs):
+    match_dist = None
+    match_img = None
+    for image, rgbs in mean_image_rgbs:
+       dis = color_difference(target_rgb, rgbs)
+       if match_dist is None or dis < match_dist:
+           match_img = image
+           match_dist = dis
+    return match_img
+
 import cv2
 import numpy as np
 import os
-path = './example_source_images'
+path = '.\\source_images'
 mean_image_rgbs = []
 for image in os.listdir(path):
     if image.endswith(".jpg") or image.endswith(".png"):
@@ -44,33 +75,4 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 
 
-def get_mean(img):
-    r = b = g = total = 0
-    for row in img:
-        for pixel in row:
-           r += pixel[2]
-           g += pixel[1]
-           b += pixel[0]
-           
-           total += 1
-    return (b/total, g/total, r/total)
 
-def get_square(pixel, corner, size):
-    opposite = [corner[0]+size, corner[1]+size]
-    square = pixel[corner[0]:opposite[0], corner[1]:opposite[1]]
-    return square
-def color_difference(p1, p2):
-    tot = 0
-    for c1, c2 in zip(p1, p2):
-        tot += (c1-c2)**2
-    dist = tot ** 0.5
-    return dist
-def pythogoras_theorem(target_rgb, mean_image_rgbs):
-    match_dist = None
-    match_img = None
-    for image, rgbs in mean_image_rgbs:
-       dis = color_difference(target_rgb, rgbs)
-       if match_dist is None or dis < match_dist:
-           match_img = image
-           match_dist = dis
-    return match_img
