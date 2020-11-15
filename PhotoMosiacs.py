@@ -49,7 +49,7 @@ for image in os.listdir(path):
     mean_image_rgbs.append((img, mean))
         
 
-img = cv2.imread('D:\\Projects\\Open CV\\Project\\Messi.jpg')
+img = cv2.imread('Messi.jpg')
 
 pixel_img = np.zeros((img.shape[0], img.shape[1], img.shape[2]), np.uint8)
 mosiac = np.zeros((img.shape[0], img.shape[1], img.shape[2]), np.uint8)
@@ -73,6 +73,3 @@ cv2.imshow('pixel', pixel_img)
 cv2.imshow('mosiac', mosiac)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-
-
